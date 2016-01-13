@@ -1,2 +1,2 @@
 # Storn5_Repository
-Storn5's Repository for C, C++, Java and Python files.
+This is the Storn5's Repository for my C, C++, Java and Python training files.
