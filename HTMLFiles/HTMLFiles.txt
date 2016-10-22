@@ -1,1 +1,1 @@
-This is my HTML files folder. It is where all my HTML files go. It also contains my LVIVCSIT2015 files.
+This is my HTML files folder. It is where all my HTML files go.
