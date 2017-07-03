@@ -9,11 +9,11 @@ def revFact(n):
     elif(n < 1):
         return NULL
 
-def Main():
+def main():
     x = 120
     y = 150
     print(str(x) + "=" + str(revFact(x)) + "!")
     print(str(y) + "=" + str(revFact(y)) + "!")
 
 if(__name__ == "__main__"):
-    Main()
+    main()
