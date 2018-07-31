@@ -1,59 +1,44 @@
-board = {'top-L': ' ', 'top-M': ' ', 'top-R': ' ',
-         'mid-L': ' ', 'mid-M': ' ', 'mid-R': ' ',
-         'low-L': ' ', 'low-M': ' ', 'low-R': ' '}
+board = [' ', ' ', ' ',
+         ' ', ' ', ' ',
+         ' ', ' ', ' ']
 
-def printBoard(boardToPrint):
+def printBoard():
     print('+---+---+---+')
-    print('| ' + boardToPrint['top-L'] + ' | ' + boardToPrint['top-M'] + ' | ' + boardToPrint['top-R'] + ' |')
+    print('| ' + board[0] + ' | ' + board[1] + ' | ' + board[2] + ' |')
     print('+---+---+---+')
-    print('| ' + boardToPrint['mid-L'] + ' | ' + boardToPrint['mid-M'] + ' | ' + boardToPrint['mid-R'] + ' |')
+    print('| ' + board[3] + ' | ' + board[4] + ' | ' + board[5] + ' |')
     print('+---+---+---+')
-    print('| ' + boardToPrint['low-L'] + ' | ' + boardToPrint['low-M'] + ' | ' + boardToPrint['low-R'] + ' |')
+    print('| ' + board[6] + ' | ' + board[7] + ' | ' + board[8] + ' |')
     print('+---+---+---+')
 
-def gameOver():
+def gameOver(lastTurn):
+    if lastTurn == 'O':
+        lastTurn = 'X'
+    else:
+        lastTurn = 'O'
     boardFull = True
     for i in board:
-        if board[i] == ' ':
+        if i == ' ':
             boardFull = False
-    if boardFull:
+    if (board[0] == board[1] == board[2] != ' ') or (board[3] == board[4] == board[5] != ' ') or (board[6] == board[7] == board[8] != ' ') or (board[0] == board[3] == board[6] != ' ') or (board[1] == board[4] == board[7] != ' ') or (board[2] == board[5] == board[8] != ' ') or (board[0] == board[4] == board[8] != ' ') or (board[2] == board[4] == board[6] != ' '):
+        return lastTurn
+    elif boardFull:
         return 'Nobody'
     else:
-        #Add win conditions for X here
-        #if (board['top-L'] == 'X' and board['top-M'] == 'X' and board['top-R'] == 'X') or
-        #(board['mid-L'] == 'X' and board['mid-M'] == 'X' and board['mid-R'] == 'X') or
-        #(board['low-L'] == 'X' and board['low-M'] == 'X' and board['low-R'] == 'X') or
-        #(board['low-L'] == 'X' and board['mid-L'] == 'X' and board['top-L'] == 'X') or
-        #(board['low-M'] == 'X' and board['mid-M'] == 'X' and board['top-M'] == 'X') or
-        #(board['low-R'] == 'X' and board['mid-R'] == 'X' and board['top-R'] == 'X') or
-        #(board['low-R'] == 'X' and board['mid-M'] == 'X' and board['top-L'] == 'X') or
-        #(board['top-R'] == 'X' and board['mid-M'] == 'X' and board['low-L'] == 'X'):
-        #    return 'X'
-        #Add win conditions for O here
-        #elif (board['top-L'] == 'O' and board['top-M'] == 'O' and board['top-R'] == 'O') or
-        #(board['mid-L'] == 'O' and board['mid-M'] == 'O' and board['mid-R'] == 'O') or
-        #(board['low-L'] == 'O' and board['low-M'] == 'O' and board['low-R'] == 'O') or
-        #(board['low-L'] == 'O' and board['mid-L'] == 'O' and board['top-L'] == 'O') or
-        #(board['low-M'] == 'O' and board['mid-M'] == 'O' and board['top-M'] == 'O') or
-        #(board['low-R'] == 'O' and board['mid-R'] == 'O' and board['top-R'] == 'O') or
-        #(board['low-R'] == 'O' and board['mid-M'] == 'O' and board['top-L'] == 'O') or
-        #(board['top-R'] == 'O' and board['mid-M'] == 'O' and board['low-L'] == 'O'):
-        #    return 'O'
-        #else:
-        #    return 'notOver'
+        return 'notOver'
 
 def game():
     turn = 'X'
     while True:
-        printBoard(board)
-        if gameOver() != 'notOver':
-            print('Game over! ' + gameOver() + ' won!')
+        printBoard()
+        if gameOver(turn) != 'notOver':
+            print('Game over! ' + gameOver(turn) + ' won!')
             break
-        move = input(turn + '\'s move! Where do you want to move? (Enter nothing to quit)\n')
+        move = input(turn + '\'s turn! Where do you want to move? (Enter nothing to quit)\n')
         if move == '':
             break
-        elif board[move] == ' ':
-            board[move] = turn
+        elif board[int(move)] == ' ':
+            board[int(move)] = turn
         else:
             print('You can\'t move there! Try again!')
             if turn == 'X':
