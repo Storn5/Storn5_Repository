@@ -10,6 +10,7 @@ DINO_WIDTH = 39
 DINO_HEIGHT = 27
 DINO_SPEED = 2
 FRAMES_PER_WALK_ANIMATION = 15
+ROCK_SIZE = 64
 
 #Images
 playerImg1 = pygame.image.load("Dino1.png")
@@ -27,11 +28,11 @@ def playerShow(x, y):
     else:
         display.blit(pygame.transform.flip(playerImg, True, False), (x, y))
 def rocksShow():
-    for x in range(0, DISPLAY_WIDTH, 64):
-        for y in range(0, DISPLAY_HEIGHT, DISPLAY_HEIGHT - 64):
+    for x in range(0, DISPLAY_WIDTH, ROCK_SIZE):
+        for y in range(0, DISPLAY_HEIGHT, DISPLAY_HEIGHT - ROCK_SIZE):
             display.blit(rockImg, (x, y))
-    for y in range(0, DISPLAY_HEIGHT, 64):
-        for x in range(0, DISPLAY_WIDTH, DISPLAY_WIDTH - 64):
+    for y in range(0, DISPLAY_HEIGHT, ROCK_SIZE):
+        for x in range(0, DISPLAY_WIDTH, DISPLAY_WIDTH - ROCK_SIZE):
             display.blit(rockImg, (x, y))
 
 #Vars
@@ -61,14 +62,14 @@ while play:
         playerX += DINO_SPEED
         playerOrient = True
     #Walk boundaries
-    if playerX <= 64:
-        playerX = 64
-    elif playerX >= DISPLAY_WIDTH - (64 + DINO_WIDTH):
-        playerX = DISPLAY_WIDTH - (64 + DINO_WIDTH)
-    if playerY <= 64:
-        playerY = 64
-    elif playerY >= DISPLAY_HEIGHT - (64 + DINO_HEIGHT):
-        playerY = DISPLAY_HEIGHT - (64 + DINO_HEIGHT)
+    if playerX <= ROCK_SIZE:
+        playerX = ROCK_SIZE
+    elif playerX >= DISPLAY_WIDTH - (ROCK_SIZE + DINO_WIDTH):
+        playerX = DISPLAY_WIDTH - (ROCK_SIZE + DINO_WIDTH)
+    if playerY <= ROCK_SIZE:
+        playerY = ROCK_SIZE
+    elif playerY >= DISPLAY_HEIGHT - (ROCK_SIZE + DINO_HEIGHT):
+        playerY = DISPLAY_HEIGHT - (ROCK_SIZE + DINO_HEIGHT)
     #Walk animation
     playerWalkCounter += 1
     if (keys[pygame.K_w] or keys[pygame.K_s] or keys[pygame.K_a] or keys[pygame.K_d]) and playerWalkCounter >= FRAMES_PER_WALK_ANIMATION:
