@@ -1,24 +1,28 @@
-#include <sc50.h>
+#include <cs50.h>
 #include <stdio.h>
 #include <math.h>
 
 int main() {
-    float change;
-    int coins = 0;
-    while(1) { 
+    double change;
+    int coins = 0, changeInt;
+    while(1) {
         printf("Change: ");
-        change = GetFloat();
+        change = get_float();
         if(change >= 0) {
             break;
         }
     }
-    coins += (int)(change / 0.25);
-    change -= (int)(change / 0.25) * 0.25;
-    coins += (int)(change / 0.1);
-    change -= (int)(change / 0.1) * 0.1;
-    coins += (int)(change / 0.05);
-    change -= (int)(change / 0.05) * 0.05;
-    change *= 100
-    coins += (int)round(change);
+    changeInt = (int)round(change * 100);
+    printf("%d %d\n", coins, changeInt);
+    coins += (int)(changeInt / 25);
+    changeInt -= (int)(changeInt / 25) * 25;
+    printf("%d %d\n", coins, changeInt);
+    coins += (int)(changeInt / 10);
+    changeInt -= (int)(changeInt / 10) * 10;
+    printf("%d %d\n", coins, changeInt);
+    coins += (int)(changeInt / 5);
+    changeInt -= (int)(changeInt / 5) * 5;
+    printf("%d %d\n", coins, changeInt);
+    coins += (int)(changeInt);
     printf("%d\n", coins);
 }

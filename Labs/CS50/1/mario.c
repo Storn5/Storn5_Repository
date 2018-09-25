@@ -1,11 +1,11 @@
-#include <sc50.h>
+#include <cs50.h>
 #include <stdio.h>
 
 int main() {
     int height;
     while(1) { 
         printf("Height: ");
-        height = GetInt();
+        height = get_int();
         if(height <= 23 && height >= 0) {
             break;
         }
