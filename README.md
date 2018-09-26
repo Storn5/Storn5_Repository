@@ -1,2 +1,2 @@
 # Storn5_Repository
-Storn5's public Repository for various C++, HTML, Java and Python files.
+Storn5's public Repository for learning to create various C, C++, Java and Python projects.
