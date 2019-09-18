@@ -3,7 +3,7 @@ import pygame
 
 def showResults(results):
 	pygame.init()
-	window = pygame.display.set_mode((256, 256))
+	window = pygame.display.set_mode((522, 256))
 	pygame.display.set_caption('Colors')
 	colors = {'Red': (255, 0, 0), 'Green': (0, 255, 0), 'Blue': (0, 0, 255), 'Pink': (255, 127, 127), 'Orange': (255, 127, 0)}
 	run = True
@@ -16,6 +16,10 @@ def showResults(results):
 		for i in range(0, 256, 16):
 			for j in range(0, 256, 16):
 				pygame.draw.rect(window, colors[results[(red_counter, i, j)]], (i, j, 16, 16))
+		pygame.draw.rect(window, (255, 255, 255), (256, 0, 10, 256))
+		for i in range(0, 256, 16):
+			for j in range(0, 256, 16):
+				pygame.draw.rect(window, (red_counter, i, j), (i + 266, j, 16, 16))
 		red_counter += 16
 		if red_counter >= 256:
 			red_counter = 0
