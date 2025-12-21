@@ -1,0 +1,40 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: #111112;
+}
+
+.the-button {
+    width: 20%;
+    height: 40px;
+    background-color: #050505;
+    border-color: black;
+    color: cornflowerblue;
+    font-family: 'Consolas', monospace;
+    font-size: clamp(1rem, 1rem + 1vw, 2rem);
+    border-style: solid;
+    border-radius: 8px;
+}
+
+.the-button:hover {
+    width: 25%;
+    height: 50px;
+    background-color: white;
+    border-color: #050505;
+    color: #050505;
+}
+
+.the-button:active {
+    background-color: #050505;
+    border-color: black;
+    color: cornflowerblue;
+}
