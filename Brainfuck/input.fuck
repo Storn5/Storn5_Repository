@@ -1,0 +1,5 @@
+,           Read input into memory(0)
+[           While not 0
+    ->++<         Subtract 1 at memory(0) and add 2 at memory(1)
+]
+>.          Print memory(0)
