@@ -7,7 +7,6 @@ SCREEN = Vector2(1280, 720)
 FPS = 60
 
 FOV = 90
-FOCAL_LENGTH = 1/np.tan(np.radians(FOV)/2)
 ASPECT = SCREEN.y / SCREEN.x
 NEAR = 0.3
 FAR = 1000
@@ -19,11 +18,12 @@ LINE_COLOR = Vector3(255, 0, 0)
 RAY_COLOR = Vector3(0, 255, 0)
 LINE_THICCNESS = 3
 FONTSIZE = 30
-TUTORIAL_TXT = ('Move camera with WASD, turn with Q/E',
+TUTORIAL_TXT = ('Move camera with WASD, turn with Q/E, change FOV with Z/X',
                 'Move cube with IKJL, turn it with U/O')
 
 camera_pos = Vector3(0, 0, 4)
 camera_yaw = 0
+focal_length = 1/np.tan(np.radians(FOV)/2)
 
 cube_pos = Vector3(0, 0, 0)
 cube_yaw = 0
@@ -77,7 +77,7 @@ triangles = (
 #                             
 
 def handle_input(events):
-    global camera_yaw, cube_yaw
+    global camera_yaw, cube_yaw, focal_length
 
     for event in events:
         if event.type == QUIT:
@@ -100,6 +100,12 @@ def handle_input(events):
         camera_yaw += CAMERA_SPEED
     elif keys[pygame.K_e]:
         camera_yaw -= CAMERA_SPEED
+    if keys[pygame.K_z]:
+        focal_length += CAMERA_SPEED
+    elif keys[pygame.K_x]:
+        focal_length -= CAMERA_SPEED
+        if focal_length < 0.00000000001:
+            focal_length = 0.00000000001
 
     if keys[pygame.K_i]:
         cube_pos.z -= CAMERA_SPEED * np.cos(cube_yaw)
@@ -157,8 +163,8 @@ def render_faces(screen):
     view_matrix = np.linalg.inv(camera_matrix)
     
     proj_matrix = np.array([
-        [FOCAL_LENGTH, 0.                 , 0.                      , 0.                      ],
-        [0.          , FOCAL_LENGTH/ASPECT, 0.                      , 0.                      ],
+        [focal_length, 0.                 , 0.                      , 0.                      ],
+        [0.          , focal_length/ASPECT, 0.                      , 0.                      ],
         [0.          , 0.                 , -((FAR+NEAR)/(FAR-NEAR)), -(2*FAR*NEAR/(FAR-NEAR))],
         [0.          , 0.                 , -1.                     , 0.                      ],
     ])
@@ -182,22 +188,18 @@ def render_faces(screen):
         for vertex1 in transformed_vertices:
             for vertex2 in transformed_vertices:
                 if not np.array_equal(vertex1, vertex2):
-                    if abs(vertex1[0]) < 1 and \
-                            abs(vertex1[1]) < 1 and \
-                            abs(vertex1[2]) < 1 and \
-                            abs(vertex2[0]) < 1 and \
-                            abs(vertex2[1]) < 1 and \
-                            abs(vertex2[2]) < 1:
+                    if abs(vertex1[2]) < 1 and abs(vertex2[2]) < 1:
                         v1 = (vertex1 + 1)[:2] * np.array([SCREEN.x / 2, SCREEN.y / 2])
                         v2 = (vertex2 + 1)[:2] * np.array([SCREEN.x / 2, SCREEN.y / 2])
                         pygame.draw.line(screen, LINE_COLOR, v1, v2, LINE_THICCNESS)
-                    else:
-                        # TODO check intersect with each face of the view frustum?
-                        pass
 
-def render(screen, text_surfaces):
+def render(screen, screen_font):
     screen.fill(BACKGROUND_COLOR)
     render_faces(screen)
+
+    fov = np.degrees(2*np.atan(1/focal_length))
+    text_surfaces = [screen_font.render(i, True, (250, 250, 250)) for i in TUTORIAL_TXT]
+    text_surfaces.append(screen_font.render(f'FOV: {fov}', True, (250, 250, 250)))
     for (i, text_surf) in enumerate(text_surfaces):
         screen.blit(text_surf, (10, 10 + i*(FONTSIZE + 10)))
     pygame.display.flip()
@@ -207,12 +209,11 @@ def main():
     clock = pygame.time.Clock()
     pygame.font.init()
     screen_font = pygame.font.SysFont('Century Gothic', FONTSIZE)
-    text_surfaces = [screen_font.render(i, True, (250, 250, 250)) for i in TUTORIAL_TXT]
 
     while True:
         dt = clock.tick(FPS)
         handle_input(pygame.event.get())
-        render(screen, text_surfaces)
+        render(screen, screen_font)
 
 
 if __name__ == '__main__':
