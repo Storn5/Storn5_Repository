@@ -1,0 +1,29 @@
+# General files
+**/*.pdf
+
+# Editor files
+**/.vscode
+**/.settings/
+**/.vs/
+
+# Python checkpoints, pytorch and JSON data
+PythonFiles/*/.ipynb_checkpoints/
+PythonFiles/*/*.pt
+PythonFiles/*/*.json
+
+# Java config files and compiled bytecode (classfiles)
+JavaFiles/**/.classpath
+JavaFiles/**/.project
+JavaFiles/**/bin/
+JavaFiles/**/.settings/
+
+# Node
+**/node_modules/
+**/*.min.js
+
+# Rust compiled binaries, rustfmt backups, mutation testing data
+Rust/*/target/
+Rust/*/debug/
+Rust/**/*.rs.bk
+Rust/**/mutants.out*/
+Rust/**/.cargo
