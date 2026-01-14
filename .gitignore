@@ -3,6 +3,7 @@
 
 # Editor files
 **/.vscode
+**/*.code-workspace
 **/.settings/
 **/.vs/
 
