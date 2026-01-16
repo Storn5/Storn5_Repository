@@ -31,6 +31,20 @@ fn test_fib_memoized(n: u32, counter: &mut u32) -> u32 {
     test_fib_memoized_inner(n, &mut memoized_fib_ns, counter)
 }
 
+fn test_fib_loop(n: u32, counter: &mut u32) -> u32 {
+    if n <= 1 {
+        return n;
+    }
+
+    let (mut a, mut b): (u32, u32) = (1, 1);
+    while *counter < n - 2 {
+        let c = a + b;
+        a = b;
+        b = c;
+        *counter += 1;
+    }
+    b
+}
 
 fn main() {
     let mut now = Instant::now();
@@ -42,4 +56,9 @@ fn main() {
     counter = 0;
     let fib_40_memoized = test_fib_memoized(40, &mut counter);
     println!("The 40th memoized Fibonacci number is {fib_40_memoized} (calculated in {:.2?} in {counter} calls)", now.elapsed());
+
+    now = Instant::now();
+    counter = 0;
+    let fib_40_loop = test_fib_loop(40, &mut counter);
+    println!("The 40th looped Fibonacci number is {fib_40_loop} (calculated in {:.2?} in {counter} calls)", now.elapsed());
 }
