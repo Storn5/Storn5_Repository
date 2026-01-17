@@ -79,7 +79,9 @@ fn main() {
     let array = [1, 2, 3, 4, 5];
     let array_slice = &array[1..];
     let new_slice = &[2, 3, 4, 5];
-    if array_slice == new_slice {
+    let new_array = [2, 3, 4, 5];
+    if array_slice == new_slice &&
+       array_slice == new_array {
         println!("Also equal!");
     }
 
