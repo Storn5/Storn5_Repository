@@ -72,6 +72,11 @@ fn strings() {
     // Can't index string with an integer as if it was a Vec or an array
     // let first_char = s4[0];
 
+    // Can index like this instead
+    let first_char = s4.chars().nth(0);
+    // Or this to get the first u8 value (part of a UTF8 char or the entire char, depending on size)
+    let first_byte = s4.bytes().nth(0);
+
     let half_of_16_bit_char = s4.as_bytes()[0];
     println!("Half of the first character: {half_of_16_bit_char}");
     // Get the first 2 Cyrillic characters:
