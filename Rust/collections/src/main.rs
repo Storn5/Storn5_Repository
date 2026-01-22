@@ -1,6 +1,9 @@
+use std::collections::HashMap;
+
 fn main() {
     vectors();
     strings();
+    hash_maps();
 }
 
 fn vectors() {
@@ -88,4 +91,55 @@ fn strings() {
     for c in s4.chars() { // chars() returns actual characters instead of bytes
         println!("{c}");
     }
+}
+
+fn hash_maps() {
+    let mut map: HashMap<u32, String> = HashMap::new();
+    let str_twenty_three = String::from("Twenty three");
+    map.insert(23, str_twenty_three);
+    // Can't use the String anymore because it was moved and the map owns it now
+    // println!("{str_twenty_three}");
+
+    map.insert(3, String::from("Three"));
+    let twenty_three = map.get(&23);
+    // Option 1 - match & dereference (what I did in fibonacci)
+    match twenty_three {
+        Some(value) => println!("{}", *value),
+        None => println!("Doesn't exist")
+    }
+    // This doesn't work if the value is String though (String doesn't have Copy, it's owned)
+    // println!("{}", twenty_three.copied().unwrap_or_default());
+
+    let mut map2: HashMap<u32, u32> = HashMap::new();
+    map2.insert(3, 34);
+    // This replaces the value by default and returns an Option that has the value previously there
+    let old_value = map2.insert(3, 35);
+    // If you don't want to replace, you can use entry().or_insert()
+    // .entry() returns an Entry, .or_insert() returns a &mut reference to the old value (if any) or new value otherwise
+    let old_value2 = map2.entry(3).or_insert(36);
+    println!("{} {}", old_value.unwrap_or_default(), old_value2);
+
+    let three = map2.get(&3);
+    // Option 2 - .copied() & unwrap (the first function extracts the value from Some)
+    println!("{}", three.copied().unwrap_or_default());
+
+    for (key, value) in &map { // You can iterate over map instead of &map, but this is better to avoid moving
+        println!("{key}: {value}");
+    }
+
+    let c = count_uniq_words("Hello world this is my string to count unique words for! hello world this is my string to count unique words");
+    println!("{c}");
+}
+
+fn count_uniq_words(text: &str) -> usize {
+    let mut word_map: HashMap<&str, u32> = HashMap::new();
+
+    // split_whitespace() will iterate over &str slices
+    for word in text.split_whitespace() {
+        // This is useful to get a mutable reference to the value that's there and insert it if it isn't
+        let cur_count = word_map.entry(word).or_default();
+        *cur_count += 1;
+    }
+
+    word_map.len() as usize
 }
