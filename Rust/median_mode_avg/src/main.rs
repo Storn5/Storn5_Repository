@@ -21,6 +21,8 @@ fn main() {
     time_mode_loop();
     time_median();
     time_median_mergesort();
+    time_median_insertionsort();
+    time_median_mergeinsertionsort();
 }
 
 fn time_mode() {
@@ -61,6 +63,26 @@ fn time_median_mergesort() {
         print!("{a}\r");
     }
     println!("\rMedian merge sort time: {:.2?}", now.elapsed());
+}
+
+fn time_median_insertionsort() {
+    let mut nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let now = Instant::now();
+    for _ in 0..10_000 {
+        let a = median_insertionsort(&mut nums).unwrap();
+        print!("{a}\r");
+    }
+    println!("\rMedian insertion sort time: {:.2?}", now.elapsed());
+}
+
+fn time_median_mergeinsertionsort() {
+    let mut nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let now = Instant::now();
+    for _ in 0..10_000 {
+        let a = median_mergeinsertionsort(&mut nums).unwrap();
+        print!("{a}\r");
+    }
+    println!("\rMedian merge & insertion sort time: {:.2?}", now.elapsed());
 }
 
 /// Returns most common number, if numbers are empty returns None 
@@ -125,6 +147,26 @@ fn median_mergesort(mut nums: &mut [i32]) -> Option<i32> {
     Some(nums[len / 2])
 }
 
+fn median_insertionsort(mut nums: &mut [i32]) -> Option<i32> {
+    let len = nums.len();
+    if len == 0 {
+        return None;
+    }
+
+    insertion_sort(&mut nums);
+    Some(nums[len / 2])
+}
+
+fn median_mergeinsertionsort(mut nums: &mut [i32]) -> Option<i32> {
+    let len = nums.len();
+    if len == 0 {
+        return None;
+    }
+
+    merge_and_insertion_sort(&mut nums);
+    Some(nums[len / 2])
+}
+
 fn merge_sort(nums: &mut [i32]) {
     let len = nums.len();
     if len <= 1 {
@@ -139,6 +181,63 @@ fn merge_sort(nums: &mut [i32]) {
     let right_len = right.len();
     merge_sort(&mut left);
     merge_sort(&mut right);
+
+    let mut new_nums: Vec<i32> = Vec::with_capacity(len);
+    let (mut left_index, mut right_index): (usize, usize) = (0, 0);
+    while left_index < left_len || right_index < right_len {
+        // I'm adding the leftover elements inside this loop, because doing .extend_from_slice() after the loop was slower
+        if left_index == left_len {
+            new_nums.push(right[right_index]);
+            right_index += 1;
+        } else if right_index == right_len {
+            new_nums.push(left[left_index]);
+            left_index += 1;
+        } else {
+            if left[left_index] < right[right_index] {
+                new_nums.push(left[left_index]);
+                left_index += 1;
+            } else {
+                new_nums.push(right[right_index]);
+                right_index += 1;
+            }
+        }
+    }
+
+    // But copy_from_slice is faster than manually assigning the elements of nums
+    nums.copy_from_slice(&new_nums);
+}
+
+fn insertion_sort(nums: &mut [i32]) {
+    let mut i: usize = 1;
+    while i < nums.len() {
+        let mut j = i;
+        let val_to_compare = nums[i];
+        while j > 0 && val_to_compare < nums[j - 1] {
+            nums[j] = nums[j - 1];
+            j -= 1;
+        }
+        nums[j] = val_to_compare;
+        i += 1;
+    }
+}
+
+fn merge_and_insertion_sort(nums: &mut [i32]) {
+    let len = nums.len();
+    if len <= 1 {
+        return;
+    } else if len <= 16 {
+        insertion_sort(nums);
+        return;
+    }
+
+    // Can't do this because you can't have 2 mut references to nums
+    // let left =  &mut nums[..len/2];
+    // let right = &mut nums[len/2..];
+    let (mut left, mut right) = nums.split_at_mut(len/2);
+    let left_len = left.len();
+    let right_len = right.len();
+    merge_and_insertion_sort(&mut left);
+    merge_and_insertion_sort(&mut right);
 
     let mut new_nums: Vec<i32> = Vec::with_capacity(len);
     let (mut left_index, mut right_index): (usize, usize) = (0, 0);
