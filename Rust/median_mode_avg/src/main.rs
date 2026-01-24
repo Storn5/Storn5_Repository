@@ -1,0 +1,119 @@
+use std::{collections::HashMap, time::Instant};
+
+fn main() {
+    let mut nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let mode_val = mode(&nums).expect("Couldn't get mode");
+    let mode_val_loop = mode_loop(&nums).expect("Couldn't get mode with loop");
+    let median_val = median(&mut nums).expect("Couldn't get median");
+    let mean_val = mean(&nums).expect("Couldn't get mean");
+    // Should be     5,                                    3,                  2.7142857142857144
+    println!("Mode: {mode_val} ({mode_val_loop}), Median: {median_val}, Mean: {mean_val}");
+
+    nums = Vec::from([]);
+    let mode_val = mode(&nums).unwrap_or(69);
+    let mode_val_loop = mode_loop(&nums).unwrap_or(69);
+    let median_val = median(&mut nums).unwrap_or(69);
+    let mean_val = mean(&nums).unwrap_or(69.0);
+    // Should be     69,                                   69,                 69
+    println!("Mode: {mode_val} ({mode_val_loop}), Median: {median_val}, Mean: {mean_val}");
+
+    time_mode();
+    time_mode_loop();
+    time_median();
+}
+
+fn time_mode() {
+    let nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let now = Instant::now();
+    for _ in 0..10_000 {
+        let a = mode(&nums).unwrap();
+        print!("{a}\r");
+    }
+    println!("\rMode 1 time: {:.2?}", now.elapsed());
+}
+
+fn time_mode_loop() {
+    let nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let now = Instant::now();
+    for _ in 0..10_000 {
+        let a = mode_loop(&nums).unwrap();
+        print!("{a}\r");
+    }
+    println!("\rMode 2 time: {:.2?}", now.elapsed());
+}
+
+fn time_median() {
+    let mut nums = Vec::from([1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10, 1, 2, 3, 2, 5, -2, -1, 3, -1, 5, 5, 9, -3, 10]);
+    let now = Instant::now();
+    for _ in 0..10_000 {
+        let a = median(&mut nums).unwrap();
+        print!("{a}\r");
+    }
+    println!("\rMedian sort() time: {:.2?}", now.elapsed());
+}
+
+/// Returns most common number, if numbers are empty returns None 
+fn mode(nums: &[i32]) -> Option<i32> {
+    if nums.len() == 0 {
+        return None;
+    }
+
+    let mut map: HashMap<i32, u32> = HashMap::new();
+    for i in nums {
+        let i_occurences = map.entry(*i).or_default();
+        *i_occurences += 1;
+    }
+
+    match map.iter().max_by(|first, second| first.1.cmp(&second.1)) {
+        Some((&key, &_)) => Some(key),
+        None => None
+    }
+}
+
+/// Alternative implementation with a loop to find max map value
+fn mode_loop(nums: &[i32]) -> Option<i32> {
+    if nums.len() == 0 {
+        return None;
+    }
+
+    let mut map: HashMap<i32, u32> = HashMap::new();
+    for i in nums {
+        let i_occurences = map.entry(*i).or_default();
+        *i_occurences += 1;
+    }
+
+    let mut max: u32 = 0;
+    let mut max_num: i32 = 0;
+    for (key, value) in map {
+        if value >= max {
+            max = value;
+            max_num = key;
+        }
+    }
+
+    Some(max_num)
+}
+
+fn median(nums: &mut [i32]) -> Option<i32> {
+    let len = nums.len();
+    if len == 0 {
+        return None;
+    }
+
+    nums.sort();
+    Some(nums[len / 2])
+}
+
+fn mean(nums: &[i32]) -> Option<f64> {
+    let len = nums.len();
+    if len == 0 {
+        return None;
+    }
+
+    let mut sum = 0;
+    for &i in nums {
+        sum += i;
+    }
+
+    Some(sum as f64 / len as f64)
+}
