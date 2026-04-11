@@ -8,7 +8,7 @@
 **/.vs/
 
 # Python checkpoints, pytorch and JSON data
-PythonFiles/*/.ipynb_checkpoints/
+PythonFiles/**/.ipynb_checkpoints/
 PythonFiles/*/*.pt
 PythonFiles/*/*.json
 
